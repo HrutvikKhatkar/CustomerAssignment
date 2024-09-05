@@ -1,49 +1,44 @@
 import React, { useState, useEffect } from 'react';
-import './CustomerProfile.css'; // Import your CSS file
+import './CustomerProfile.css'; 
+import { useParams } from 'react-router-dom';
 
-const CustomerProfile = ({ customer, setView }) => {
-  const [profileData, setProfileData] = useState(customer);
+const CustomerProfile = () => {
+  const { id } = useParams(); // Extract the id from the URL
+  const [customer, setCustomer] = useState(null);
 
   useEffect(() => {
     const fetchCustomer = async () => {
-      const response = await fetch(`/customers/${customer.id}/`);
-      const data = await response.json();
-      setProfileData(data);
+      try {
+        const response = await fetch(`http://localhost:5000/customers/${id}`);
+        const data = await response.json();
+        setCustomer(data);
+      } catch (error) {
+        console.error('Error fetching customer:', error);
+      }
     };
+
     fetchCustomer();
-  }, [customer]);
+  }, [id]);
 
-  const handleDelete = async () => {
-    if (window.confirm('Are you sure you want to delete this customer?')) {
-      await fetch(`/customers/${customer.id}/`, { method: 'DELETE' });
-      setView('list');
-    }
-  };
-
-  const handleUpdate = async () => {
-    setView('form');
-    // Optionally populate form with existing data for editing
-  };
+  if (!customer) {
+    return <p>Loading...</p>;
+  }
 
   return (
-    <div className="profile-container">
-      <h2>{profileData.firstName} {profileData.lastName}</h2>
-      <p>Phone: {profileData.phone}</p>
-      <p>Email: {profileData.email}</p>
-      <h3>Addresses:</h3>
+    <div>
+      <h2>{customer.firstName} {customer.lastName}</h2>
+      <p>Phone: {customer.phone}</p>
+      <p>Email: {customer.email}</p>
       <ul>
-        {profileData.addresses.map((address, index) => (
+        {customer.addresses.map((address, index) => (
           <li key={index}>
-            {address.street}, {address.city}, {address.state} - {address.zip}
-            {address.isPrimary && ' (Primary)'}
+            {address.street}, {address.city}, {address.state} - {address.zip} {address.isPrimary ? '(Primary)' : ''}
           </li>
         ))}
       </ul>
-      <button onClick={handleUpdate}>Update Customer</button>
-      <button onClick={handleDelete}>Delete Customer</button>
-      <button onClick={() => setView('list')}>Back to List</button>
     </div>
   );
 };
 
 export default CustomerProfile;
+
