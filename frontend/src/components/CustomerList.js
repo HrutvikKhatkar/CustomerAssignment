@@ -121,36 +121,26 @@ const CustomerList = ({ setView, setSelectedCustomer }) => {
         <div className="customer-cards">
           {customers.length === 0 ? (
             <p>No customers found</p>
-          ) : 
-            // (
-            //   // customers.map((customer) => (
-            //   //   <div className="customer-card" key={customer.id}>
-            //   //     <h3>{customer.firstName} {customer.lastName}</h3>
-            //   //     <p><strong>Phone:</strong> {customer.phone}</p>
-            //   //     <p><strong>Email:</strong> {customer.email}</p>
-            //   //     <h4>Addresses:</h4>
-            //   //     <ul>
-            //   //       {(customer.addresses || []).map((address, index) => (
-            //   //         <li key={index}>
-            //   //           {address.street}, {address.city}, {address.state} - {address.zip} {address.isPrimary ? '(Primary)' : ''}
-            //   //         </li>
-            //   //       ))}
-            //   //     </ul>
-            //   //     <div className="card-buttons">
-            //   //       <button className="edit-button" onClick={() => handleEdit(customer)}>Edit</button>
-            //   //       <button className="delete-button" onClick={() => handleDelete(customer.id)}>Delete</button>
-            //   //     </div>
-            //   //   </div>
-            //   // ))
-            // )
-            (
-              customers.map((customer) => (
-                <li key={customer.id}>
-                  <Link to={`/customer/${customer.id}`}>{customer.firstName} {customer.lastName}</Link>
-                </li>
-              ))
-            )
-          }
+          ) : (
+            customers.map((customer) => (
+              <div className="customer-card" key={customer.id}>
+                <h3>{customer.firstName} {customer.lastName}</h3>
+                <p><strong>Phone:</strong> {customer.phone}</p>
+                <p><strong>Email:</strong> {customer.email}</p>
+                <ul>
+                  {(customer.addresses || []).map((address, index) => (
+                    <li key={index}>
+                      {address.street}, {address.city}, {address.state} - {address.zip} {address.isPrimary ? '(Primary)' : ''}
+                    </li>
+                  ))}
+                </ul>
+                <div className="card-buttons">
+                  <button className="edit-button" onClick={() => handleEdit(customer)}>Edit</button>
+                  <button className="delete-button" onClick={() => handleDelete(customer.id)}>Delete</button>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       )}
     </div>
